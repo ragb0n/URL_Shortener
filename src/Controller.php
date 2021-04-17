@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App;
 
+require_once("src/Exception/ConfigurationException.php");
+
+use App\Exceptions\ConfigurationException;
+
 require_once("src/Database.php");
 require_once("View.php");
 
@@ -24,6 +28,9 @@ class Controller
 
     public function __construct(array $request) //konstruktor tworzący obiekt Database o nazwi
     {
+        if (empty(self::$configuration['db'])) {
+            throw new ConfigurationException('Configuration error');
+          }
         $this->database = new Database(self::$configuration['db']);
         $this->request = $request;
         $this->view = new View();
@@ -71,7 +78,7 @@ class Controller
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;

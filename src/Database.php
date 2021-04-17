@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Exceptions\ConfigurationException;
+use App\Exceptions\StorageException;
 use PDO;
+use PDOException;
+use Throwable;
 
 class Database
 {
@@ -12,16 +16,26 @@ class Database
 
     public function __construct(array $config)
     {
-        $this->createConnection($config);
+        try {
+            $this->validateConfig($config);
+            $this->createConnection($config);
+        } catch (PDOException $e) 
+        {
+            throw new StorageException('Błąd połączenia');
+        }
     }
 
     public function shortenURL(array $data): void
     {
-        $beforeURL = $this->conn->quote($data['beforeURL']);
-        $afterURL = $this->conn->quote($data['afterURL']);
-        $query = "INSERT INTO urls(beforeURL, afterURL) VALUES($beforeURL, $afterURL)";
-
-        $this->conn->exec($query);
+        try {
+            $beforeURL = $this->conn->quote($data['beforeURL']);
+            $afterURL = $this->conn->quote($data['afterURL']);
+            $query = "INSERT INTO urls(beforeURL, afterURL) VALUES($beforeURL, $afterURL)";
+            $this->conn->exec($query);
+        } catch (Throwable $e)
+        {
+            throw new StorageException('Nie udało się skrócić adresu', 400, $e);
+        }
     }
 
     public function resolveURL(string $id): array
@@ -43,4 +57,16 @@ class Database
             ]
             );
     }
+
+    private function validateConfig(array $config): void
+  {
+    if (
+      empty($config['database'])
+      || empty($config['host'])
+      || empty($config['user'])
+      || empty($config['password'])
+    ) {
+      throw new ConfigurationException('Storage configuration error');
+    }
+  }
 }
