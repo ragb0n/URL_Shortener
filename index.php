@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Exception\AppException;
-use App\Exception\ConfigurationException;
+use App\Exceptions\AppException;
+use App\Exceptions\ConfigurationException;
 use Throwable;
 
 require_once("src/Utils/debug.php");
 require_once("src/Controller.php");
-require_once("src/Exception/AppException.php");
+require_once("src/Exceptions/AppException.php");
 
 $configuration = require_once("config/Config.php");
 
@@ -24,11 +24,11 @@ try
 {
   Controller::initConfiguration($configuration); //uruchamia metodę klasy Controller z parametrami ze zmiennej $configuration, tj. z pliku Config.php
   (new Controller($request))->run(); //tworzy nowy pbiekt klasy Controller, do którego przekazuje $request i od razu uruchamia metodą run() klasy Controller
-} catch (Exception\ConfigurationException $e)
+} catch (ConfigurationException $e)
 {
   echo "<h1>Wystapił błąd w aplikacji";
   echo '<h3>Problem z aplikacją, proszę skontaktować się z administratorem</h3>';
-} catch (AppException $e) 
+} catch (Exceptions\AppException $e) 
 {
   echo '<h1>Wystąpił błąd w aplikacji</h1>';
   echo '<h3>' . $e->getMessage() . '</h3>';

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
-require_once("src/Exception/ConfigurationException.php");
+require_once("Exceptions/ConfigurationException.php");
 
-use App\Exceptions\ConfigurationException;
+use App\Exception\ConfigurationException;
 
 require_once("src/Database.php");
 require_once("View.php");

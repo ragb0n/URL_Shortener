@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Exceptions\ConfigurationException;
-use App\Exceptions\StorageException;
+require_once("Exceptions/StorageExceptions.php");
+
+use App\Exception\ConfigurationException;
+use App\Exception\StorageException;
 use PDO;
 use PDOException;
 use Throwable;
