@@ -1,3 +1,3 @@
 # URL_Shortener
 
-Simple URL address shortener
+A simple URL shortener project, created as a result of temporary boredom and a sudden "inspiration" 😉
